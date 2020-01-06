@@ -103,6 +103,15 @@ func ReleaseHeader(h reflect.SliceHeader) {
 //
 // Caution! Don't try to release non-cbyte slices.
 func ReleaseSlice(p []byte) {
-	h := *(*reflect.SliceHeader)(unsafe.Pointer(&p))
-	ReleaseHeader(h)
+	ReleaseHeader(Header(p))
+}
+
+// Decompose byte slice to SliceHeader.
+func Header(p []byte) reflect.SliceHeader {
+	return *(*reflect.SliceHeader)(unsafe.Pointer(&p))
+}
+
+// Compose byte slice from SliceHeader.
+func Slice(h reflect.SliceHeader) []byte {
+	return *(*[]byte)(unsafe.Pointer(&h))
 }

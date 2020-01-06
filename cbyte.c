@@ -6,6 +6,10 @@ uint64_t cbyte_init(int cap) {
     return (uint64_t) malloc(cap);
 }
 
+uint64_t cbyte_init_set(int cap) {
+    return (uint64_t) malloc(cap * sizeof(uint64_t));
+}
+
 uint64_t cbyte_grow_m(uint64_t addr, int cap_o, int cap_n) {
     uint64_t addr_n = (uint64_t) malloc(cap_n);
     if (addr_n == 0) {
