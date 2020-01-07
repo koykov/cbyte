@@ -112,6 +112,6 @@ func Header(p []byte) reflect.SliceHeader {
 }
 
 // Compose byte slice from SliceHeader.
-func Slice(h reflect.SliceHeader) []byte {
+func Bytes(h reflect.SliceHeader) []byte {
 	return *(*[]byte)(unsafe.Pointer(&h))
 }
