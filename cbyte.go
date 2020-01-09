@@ -102,7 +102,7 @@ func ReleaseHeader(h reflect.SliceHeader) {
 // Take address of the byte slice and release memory using it.
 //
 // Caution! Don't try to release non-cbyte slices.
-func ReleaseSlice(p []byte) {
+func ReleaseBytes(p []byte) {
 	ReleaseHeader(Header(p))
 }
 
