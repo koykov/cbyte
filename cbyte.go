@@ -21,6 +21,20 @@ func Init(cap int) uint64 {
 	return uint64(C.cbyte_init(C.int(cap)))
 }
 
+// Init and return slice header of byte array.
+func InitHeader(len, cap int) reflect.SliceHeader {
+	return reflect.SliceHeader{
+		Data: uintptr(Init(cap)),
+		Len:  len,
+		Cap:  cap,
+	}
+}
+
+// Init and return cbyte slice.
+func InitBytes(len, cap int) []byte {
+	return Bytes(InitHeader(len, cap))
+}
+
 // Increase capacity of the byte array.
 //
 // All necessary copying/free will perform implicitly, don't worry about this.

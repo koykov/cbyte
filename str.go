@@ -5,6 +5,11 @@ import (
 	"unsafe"
 )
 
+// Init and return cbyte string.
+func InitStr(len int) string {
+	return Str(InitHeader(len, len))
+}
+
 // Take address of the string and release memory using it.
 //
 // Caution! Don't try to release non-cbyte strings.
