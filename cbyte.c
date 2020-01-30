@@ -2,16 +2,16 @@
 #include <string.h>
 #include "cbyte.h"
 
-uint64_t cbyte_init(int cap) {
-    return (uint64_t) malloc(cap);
+uint64 cbyte_init(int cap) {
+    return (uint64) malloc(cap);
 }
 
-uint64_t cbyte_init_set(int cap) {
-    return (uint64_t) malloc(cap * sizeof(uint64_t));
+uint64 cbyte_init_set(int cap) {
+    return (uint64) malloc(cap * sizeof(uint64));
 }
 
-uint64_t cbyte_grow_m(uint64_t addr, int cap_o, int cap_n) {
-    uint64_t addr_n = (uint64_t) malloc(cap_n);
+uint64 cbyte_grow_m(uint64 addr, int cap_o, int cap_n) {
+    uint64 addr_n = (uint64) malloc(cap_n);
     if (addr_n == 0) {
         return addr_n;
     }
@@ -23,11 +23,11 @@ uint64_t cbyte_grow_m(uint64_t addr, int cap_o, int cap_n) {
     return addr_n;
 }
 
-uint64_t cbyte_grow_r(uint64_t addr, int cap) {
-    return (uint64_t) realloc((void*)addr, cap);
+uint64 cbyte_grow_r(uint64 addr, int cap) {
+    return (uint64) realloc((void*)addr, cap);
 }
 
-void cbyte_release(uint64_t addr) {
+void cbyte_release(uint64 addr) {
     if ((void*)addr != NULL) {
         free((void*)addr);
     }

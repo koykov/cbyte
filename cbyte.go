@@ -42,9 +42,9 @@ func Grow(addr uint64, capOld, cap int) uint64 {
 	// Using combination of malloc()+memcpy()+free() to grow for short buffers is more efficient than simple using
 	// of realloc().
 	if capOld > mallocGrowThreshold {
-		return uint64(C.cbyte_grow_r(C.ulong(addr), C.int(cap)))
+		return uint64(C.cbyte_grow_r(C.uint64(addr), C.int(cap)))
 	} else {
-		return uint64(C.cbyte_grow_m(C.ulong(addr), C.int(capOld), C.int(cap)))
+		return uint64(C.cbyte_grow_m(C.uint64(addr), C.int(capOld), C.int(cap)))
 	}
 }
 
@@ -105,7 +105,7 @@ func Release(addr uint64) {
 	if addr == 0 {
 		return
 	}
-	C.cbyte_release(C.ulong(addr))
+	C.cbyte_release(C.uint64(addr))
 }
 
 // Release byte array using SliceHeader.

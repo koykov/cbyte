@@ -10,23 +10,29 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
+#include <bits/wordsize.h>
+
+#if __WORDSIZE == 64
+typedef unsigned long int uint64;
+#else
+__extension__ typedef unsigned long long int uint64;
+#endif
 
 /**
  * Initialize byte array with given capacity.
  *
  * @param cap Capacity of the array.
- * @return uint64_t
+ * @return uint64
  */
-uint64_t cbyte_init(int cap);
+uint64 cbyte_init(int cap);
 
 /**
  * Initialize addresses array with given capacity.
  *
  * @param cap Capacity of the array.
- * @return uint64_t
+ * @return uint64
  */
-uint64_t cbyte_init_set(int cap);
+uint64 cbyte_init_set(int cap);
 
 /**
  * Change capacity of the array using malloc().
@@ -40,7 +46,7 @@ uint64_t cbyte_init_set(int cap);
  * @param cap_n New capacity of the array. May be less than old capacity.
  * @return uint64 address of first item of array in virtual memory.
  */
-uint64_t cbyte_grow_m(uint64_t addr, int cap_o, int cap_n);
+uint64 cbyte_grow_m(uint64 addr, int cap_o, int cap_n);
 
 /**
  * Change capacity of the array using realloc().
@@ -51,14 +57,14 @@ uint64_t cbyte_grow_m(uint64_t addr, int cap_o, int cap_n);
  * @param cap  New capacity of the array. May be less than old capacity.
  * @return uint64 address of first item of array in virtual memory.
  */
-uint64_t cbyte_grow_r(uint64_t addr, int cap);
+uint64 cbyte_grow_r(uint64 addr, int cap);
 
 /**
  * Release buffer memory.
  *
  * @param addr  Address of the array to release.
  */
-void cbyte_release(uint64_t addr);
+void cbyte_release(uint64 addr);
 
 #ifdef __cplusplus
 }
