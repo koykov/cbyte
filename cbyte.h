@@ -10,9 +10,8 @@
 extern "C" {
 #endif
 
-#include <bits/wordsize.h>
-
-#if __WORDSIZE == 64
+/* Determine the wordsize from the preprocessor defines.  */
+#if defined __x86_64__ && !defined __ILP32__
 typedef unsigned long int uint64;
 #else
 __extension__ typedef unsigned long long int uint64;
