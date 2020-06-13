@@ -16,16 +16,16 @@ var (
 )
 
 // Register alloc callback.
-func RegisterAllocCbFn(fn *AllocCallbackFn) {
-	allocCb = fn
+func RegisterAllocCbFn(fn AllocCallbackFn) {
+	allocCb = &fn
 }
 
 // Register grow callback.
-func RegisterGrowCbFn(fn *AllocCallbackFn) {
-	allocCb = fn
+func RegisterGrowCbFn(fn GrowCallbackFn) {
+	growCb = &fn
 }
 
 // Register free callback.
-func RegisterFreeCbFn(fn *AllocCallbackFn) {
-	allocCb = fn
+func RegisterFreeCbFn(fn FreeCallbackFn) {
+	freeCb = &fn
 }
