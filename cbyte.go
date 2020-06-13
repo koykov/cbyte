@@ -63,7 +63,6 @@ func GrowHeader(h reflect.SliceHeader) uint64 {
 func Memcpy(addr, offset uint64, data []byte) (n int) {
 	if len(data) > shortInputThreshold {
 		// Write long data using loop rolling.
-		_ = data[len(data)-1]
 		for len(data) >= 8 {
 			*(*byte)(unsafe.Pointer(uintptr(addr + offset))) = data[0]
 			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 1))) = data[1]
@@ -99,7 +98,6 @@ func Memcpy(addr, offset uint64, data []byte) (n int) {
 			n++
 		}
 	} else {
-		_ = data[len(data)-1]
 		for i := 0; i < len(data); i++ {
 			*(*byte)(unsafe.Pointer(uintptr(addr + offset + uint64(i)))) = data[i]
 		}
