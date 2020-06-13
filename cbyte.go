@@ -18,6 +18,9 @@ const (
 
 // Init makes byte array in C memory, outside of GC's eyes.
 func Init(cap int) uint64 {
+	if allocCb != nil {
+		(*allocCb)(uint64(cap))
+	}
 	return uint64(C.cbyte_init(C.int(cap)))
 }
 
@@ -41,6 +44,9 @@ func InitBytes(len, cap int) []byte {
 func Grow(addr uint64, capOld, cap int) uint64 {
 	// Using combination of malloc()+memcpy()+free() to grow for short buffers is more efficient than simple using
 	// of realloc().
+	if growCb != nil {
+		(*growCb)(uint64(capOld), uint64(cap))
+	}
 	if capOld > mallocGrowThreshold {
 		return uint64(C.cbyte_grow_r(C.uint64(addr), C.int(cap)))
 	} else {
@@ -110,6 +116,9 @@ func Release(addr uint64) {
 
 // Release byte array using SliceHeader.
 func ReleaseHeader(h reflect.SliceHeader) {
+	if freeCb != nil {
+		(*freeCb)(uint64(h.Cap))
+	}
 	Release(uint64(h.Data))
 }
 
