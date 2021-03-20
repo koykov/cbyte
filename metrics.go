@@ -14,6 +14,8 @@ var (
 	// Builtin instance of metrics writer.
 	// By default is a DummyMetrics object that does nothing on call.
 	metricsHandler MetricsWriter = &DummyMetrics{}
+
+	_ = RegisterMetricsHandler
 )
 
 // Register new metrics handler.

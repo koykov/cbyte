@@ -5,6 +5,8 @@ import (
 	"unsafe"
 )
 
+var _ = HeaderStrSet
+
 // Decompose []string to SliceHeader.
 func HeaderStrSet(p []string) reflect.SliceHeader {
 	return *(*reflect.SliceHeader)(unsafe.Pointer(&p))

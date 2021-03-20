@@ -5,6 +5,8 @@ import (
 	"unsafe"
 )
 
+var _ = InitStr
+
 // Init and return cbyte string.
 func InitStr(len int) string {
 	return Str(InitHeader(len, len))
