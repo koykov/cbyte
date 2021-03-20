@@ -17,9 +17,7 @@ type SliceHeader64 struct {
 
 // Make big byte array in C memory.
 func Init64(cap uint64) uint64 {
-	if allocCb != nil {
-		(*allocCb)(cap)
-	}
+	metricsHandler.Alloc(cap)
 	return uint64(C.cbyte_init64(C.uint64(cap)))
 }
 
@@ -34,9 +32,7 @@ func InitHeader64(len, cap uint64) SliceHeader64 {
 
 // Increase capacity of the big byte array.
 func Grow64(addr uint64, capOld, cap uint64) uint64 {
-	if growCb != nil {
-		(*growCb)(capOld, cap)
-	}
+	metricsHandler.Grow(capOld, cap)
 	if capOld > mallocGrowThreshold {
 		return uint64(C.cbyte_grow64_r(C.uint64(addr), C.uint64(cap)))
 	} else {
@@ -51,8 +47,6 @@ func GrowHeader64(h SliceHeader64) uint64 {
 
 // Release byte array using SliceHeader64.
 func ReleaseHeader64(h SliceHeader64) {
-	if freeCb != nil {
-		(*freeCb)(h.Cap)
-	}
+	metricsHandler.Free(h.Cap)
 	Release(uint64(h.Data))
 }
