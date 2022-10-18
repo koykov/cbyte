@@ -14,17 +14,17 @@ func InitSet(cap int) uint64 {
 	return uint64(C.cbyte_init_set(C.int(cap)))
 }
 
-// Decompose [][]byte to SliceHeader.
+// HeaderSet decomposes [][]byte to SliceHeader.
 func HeaderSet(p [][]byte) reflect.SliceHeader {
 	return *(*reflect.SliceHeader)(unsafe.Pointer(&p))
 }
 
-// Compose [][]byte from SliceHeader.
+// BytesSet composes [][]byte from SliceHeader.
 func BytesSet(h reflect.SliceHeader) [][]byte {
 	return *(*[][]byte)(unsafe.Pointer(&h))
 }
 
-// Release addresses array memory.
+// ReleaseBytesSet releases addresses array memory.
 // Note, if elements is cbyte slices, you need to release them manually before call this func.
 func ReleaseBytesSet(p [][]byte) {
 	for i := range p {

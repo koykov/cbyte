@@ -7,17 +7,17 @@ import (
 
 var _ = HeaderStrSet
 
-// Decompose []string to SliceHeader.
+// HeaderStrSet decomposes []string to SliceHeader.
 func HeaderStrSet(p []string) reflect.SliceHeader {
 	return *(*reflect.SliceHeader)(unsafe.Pointer(&p))
 }
 
-// Compose []string from SliceHeader.
+// StrSet composes []string from SliceHeader.
 func StrSet(h reflect.SliceHeader) []string {
 	return *(*[]string)(unsafe.Pointer(&h))
 }
 
-// Release addresses array memory.
+// ReleaseStrSet releases addresses array memory.
 // Note, if elements is cbyte strings, you need to release them manually before call this func.
 func ReleaseStrSet(p []string) {
 	p = p[:0]

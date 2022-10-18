@@ -22,7 +22,7 @@ func Init(cap int) uint64 {
 	return uint64(C.cbyte_init(C.int(cap)))
 }
 
-// Init and return slice header of byte array.
+// InitHeader makes slice header of byte array.
 func InitHeader(len, cap int) reflect.SliceHeader {
 	return reflect.SliceHeader{
 		Data: uintptr(Init(cap)),
@@ -31,12 +31,12 @@ func InitHeader(len, cap int) reflect.SliceHeader {
 	}
 }
 
-// Init and return cbyte slice.
+// InitBytes makes and return byte slice.
 func InitBytes(len, cap int) []byte {
 	return Bytes(InitHeader(len, cap))
 }
 
-// Increase capacity of the byte array.
+// Grow increases capacity of the byte array.
 //
 // All necessary copying/free will perform implicitly, don't worry about this.
 func Grow(addr uint64, capOld, cap int) uint64 {
@@ -50,12 +50,12 @@ func Grow(addr uint64, capOld, cap int) uint64 {
 	}
 }
 
-// Increase capacity of the byte array using SliceHeader.
+// GrowHeader increases capacity of the byte array using SliceHeader.
 func GrowHeader(h reflect.SliceHeader) uint64 {
 	return Grow(uint64(h.Data), h.Len, h.Cap)
 }
 
-// Copy data bytes directly to the byte array.
+// Memcpy makes a copy of data directly to the addr+offset.
 func Memcpy(addr, offset uint64, data []byte) (n int) {
 	if len(data) > shortInputThreshold {
 		// Write long data using loop rolling.
@@ -102,7 +102,7 @@ func Memcpy(addr, offset uint64, data []byte) (n int) {
 	return
 }
 
-// Release byte array.
+// Release releases cbyte pointer.
 func Release(addr uint64) {
 	if addr == 0 {
 		return
@@ -110,25 +110,25 @@ func Release(addr uint64) {
 	C.cbyte_release(C.uint64(addr))
 }
 
-// Release byte array using SliceHeader.
+// ReleaseHeader free byte array using SliceHeader.
 func ReleaseHeader(h reflect.SliceHeader) {
 	metricsHandler.Free(uint64(h.Cap))
 	Release(uint64(h.Data))
 }
 
-// Take address of the byte slice and release memory using it.
+// ReleaseBytes free underlying cbyte slice.
 //
 // Caution! Don't try to release non-cbyte slices.
 func ReleaseBytes(p []byte) {
 	ReleaseHeader(Header(p))
 }
 
-// Decompose byte slice to SliceHeader.
+// Header converts byte slice to SliceHeader.
 func Header(p []byte) reflect.SliceHeader {
 	return *(*reflect.SliceHeader)(unsafe.Pointer(&p))
 }
 
-// Compose byte slice from SliceHeader.
+// Bytes composes byte slice from SliceHeader.
 func Bytes(h reflect.SliceHeader) []byte {
 	return *(*[]byte)(unsafe.Pointer(&h))
 }

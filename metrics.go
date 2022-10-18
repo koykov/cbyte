@@ -1,12 +1,12 @@
 package cbyte
 
-// Metrics handler interface.
+// MetricsWriter interface.
 type MetricsWriter interface {
-	// Register new allocation with given size.
+	// Alloc register size of new allocated space.
 	Alloc(size uint64)
-	// Register growing of cbyte object from sizeOld to sizeNew.
+	// Grow registers growing of cbyte object from sizeOld to sizeNew.
 	Grow(sizeOld, sizeNew uint64)
-	// Register freeing of cbyte object with given size.
+	// Free registers freeing of cbyte object with given size.
 	Free(size uint64)
 }
 
@@ -18,7 +18,7 @@ var (
 	_ = RegisterMetricsHandler
 )
 
-// Register new metrics handler.
+// RegisterMetricsHandler register new metrics handler.
 func RegisterMetricsHandler(handler MetricsWriter) {
 	metricsHandler = handler
 }
