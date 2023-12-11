@@ -37,3 +37,14 @@ func TestCbyte(t *testing.T) {
 		ReleaseHeader(h)
 	})
 }
+
+func BenchmarkCbyte(b *testing.B) {
+	b.Run("memcpy", func(b *testing.B) {
+		b.ReportAllocs()
+		h := Init(512)
+		for i := 0; i < b.N; i++ {
+			Memcpy(h, 0, t__)
+		}
+		Release(h)
+	})
+}
