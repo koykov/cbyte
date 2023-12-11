@@ -10,8 +10,6 @@ import (
 )
 
 const (
-	// Limit to switch to loop rolling write.
-	shortInputThreshold = 256
 	// Buffer size limit to use malloc to grow.
 	mallocGrowThreshold = 1024
 )
@@ -57,49 +55,15 @@ func GrowHeader(h reflect.SliceHeader) uint64 {
 
 // Memcpy makes a copy of data directly to the addr+offset.
 func Memcpy(addr, offset uint64, data []byte) (n int) {
-	if len(data) > shortInputThreshold {
-		// Write long data using loop rolling.
-		for len(data) >= 8 {
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset))) = data[0]
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 1))) = data[1]
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 2))) = data[2]
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 3))) = data[3]
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 4))) = data[4]
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 5))) = data[5]
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 6))) = data[6]
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 7))) = data[7]
-			data = data[8:]
-			offset += 8
-			n += 8
-		}
-		for len(data) >= 4 {
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset))) = data[0]
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 1))) = data[1]
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 2))) = data[2]
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 3))) = data[3]
-			data = data[4:]
-			offset += 4
-			n += 4
-		}
-		for len(data) >= 2 {
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset))) = data[0]
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + 1))) = data[1]
-			data = data[2:]
-			offset += 2
-			n += 2
-		}
-		if len(data) > 0 {
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset))) = data[0]
-			offset++
-			n++
-		}
-	} else {
-		for i := 0; i < len(data); i++ {
-			*(*byte)(unsafe.Pointer(uintptr(addr + offset + uint64(i)))) = data[i]
-		}
-		n = len(data)
+	n = len(data)
+	h := reflect.SliceHeader{
+		Data: uintptr(addr + offset),
+		Len:  n,
+		Cap:  n,
 	}
-	return
+	b := Bytes(h)
+	copy(b, data)
+	return n
 }
 
 // Release releases cbyte pointer.
@@ -132,3 +96,5 @@ func Header(p []byte) reflect.SliceHeader {
 func Bytes(h reflect.SliceHeader) []byte {
 	return *(*[]byte)(unsafe.Pointer(&h))
 }
+
+var _ = GrowHeader
