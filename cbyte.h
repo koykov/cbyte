@@ -32,14 +32,6 @@ uint64 cbyte_init(int cap);
 uint64 cbyte_init64(uint64 cap);
 
 /**
- * Initialize addresses array with given capacity.
- *
- * @param cap Capacity of the array.
- * @return uint64
- */
-uint64 cbyte_init_set(int cap);
-
-/**
  * Change capacity of the array using malloc().
  *
  * This function allows to reduce array's capacity as well.

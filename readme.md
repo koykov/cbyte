@@ -24,7 +24,7 @@ func main() {
 	
 	// Next line is equivalent of make([]byte, 0, 30), but it produces a byte slice
 	// without using of runtime.mallocgc().
-	// Therefore GC doesn't know nothing about this slice and just ignore it during
+	// Therefore GC doesn't know anything about this slice and just ignore it during
 	// both GC mark and GC termination phases.
 	p := cbyte.InitBytes(0, 30)
 	for _, w := range words {
@@ -40,7 +40,7 @@ func main() {
 ## How it works
 
 As we know slices and strings in Go bases on the underlying arrays of corresponding types.
-Each modifications of these arrays triggers new allocations that included:
+Each modification of these arrays triggers new allocations that included:
 * allocation of new array with required size;
 * copy data from the old array.
 
