@@ -1,7 +1,5 @@
 package cbyte
 
-import "reflect"
-
 // InitStr makes a string with underlying cbyte pointer.
 // DEPRECATED: use InitString() instead.
 func InitStr(len int) string {
@@ -18,14 +16,12 @@ func ReleaseStr(p string) {
 
 // HeaderStr decomposes string to SliceHeader.
 // DEPRECATED: use HeaderString() instead.
-func HeaderStr(p string) reflect.SliceHeader {
+func HeaderStr(p string) SliceHeader {
 	return HeaderString(p)
 }
 
 // Str composes string from SliceHeader.
 // DEPRECATED: use String() instead.
-func Str(h reflect.SliceHeader) string {
+func Str(h SliceHeader) string {
 	return String(h)
 }
-
-var _, _ = InitStr, HeaderStr
