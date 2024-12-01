@@ -5,7 +5,6 @@ package cbyte
 */
 import "C"
 import (
-	"reflect"
 	"unsafe"
 )
 
@@ -14,6 +13,17 @@ const (
 	mallocGrowThreshold = 1024
 )
 
+type SliceHeader struct {
+	Data uintptr
+	Len  int
+	Cap  int
+}
+
+type StringHeader struct {
+	Data uintptr
+	Len  int
+}
+
 // Init makes byte array in C memory, outside of GC's eyes.
 func Init(cap int) uint64 {
 	metricsHandler.Alloc(uint64(cap))
@@ -21,8 +31,8 @@ func Init(cap int) uint64 {
 }
 
 // InitHeader makes slice header of byte array.
-func InitHeader(len, cap int) reflect.SliceHeader {
-	return reflect.SliceHeader{
+func InitHeader(len, cap int) SliceHeader {
+	return SliceHeader{
 		Data: uintptr(Init(cap)),
 		Len:  len,
 		Cap:  cap,
@@ -49,14 +59,14 @@ func Grow(addr uint64, capOld, cap int) uint64 {
 }
 
 // GrowHeader increases capacity of the byte array using SliceHeader.
-func GrowHeader(h reflect.SliceHeader) uint64 {
+func GrowHeader(h SliceHeader) uint64 {
 	return Grow(uint64(h.Data), h.Len, h.Cap)
 }
 
 // Memcpy makes a copy of data directly to the addr+offset.
 func Memcpy(addr, offset uint64, data []byte) (n int) {
 	n = len(data)
-	h := reflect.SliceHeader{
+	h := SliceHeader{
 		Data: uintptr(addr + offset),
 		Len:  n,
 		Cap:  n,
@@ -75,7 +85,7 @@ func Release(addr uint64) {
 }
 
 // ReleaseHeader free byte array using SliceHeader.
-func ReleaseHeader(h reflect.SliceHeader) {
+func ReleaseHeader(h SliceHeader) {
 	metricsHandler.Free(uint64(h.Cap))
 	Release(uint64(h.Data))
 }
@@ -88,12 +98,12 @@ func ReleaseBytes(p []byte) {
 }
 
 // Header converts byte slice to SliceHeader.
-func Header(p []byte) reflect.SliceHeader {
-	return *(*reflect.SliceHeader)(unsafe.Pointer(&p))
+func Header(p []byte) SliceHeader {
+	return *(*SliceHeader)(unsafe.Pointer(&p))
 }
 
 // Bytes composes byte slice from SliceHeader.
-func Bytes(h reflect.SliceHeader) []byte {
+func Bytes(h SliceHeader) []byte {
 	return *(*[]byte)(unsafe.Pointer(&h))
 }
 

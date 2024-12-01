@@ -1,7 +1,6 @@
 package cbyte
 
 import (
-	"reflect"
 	"unsafe"
 )
 
@@ -18,13 +17,13 @@ func ReleaseString(p string) {
 }
 
 // HeaderString decomposes string to SliceHeader.
-func HeaderString(p string) reflect.SliceHeader {
-	h := *(*reflect.StringHeader)(unsafe.Pointer(&p))
-	return reflect.SliceHeader{Data: h.Data, Len: h.Len, Cap: h.Len}
+func HeaderString(p string) SliceHeader {
+	h := *(*StringHeader)(unsafe.Pointer(&p))
+	return SliceHeader{Data: h.Data, Len: h.Len, Cap: h.Len}
 }
 
 // String composes string from SliceHeader.
-func String(h reflect.SliceHeader) string {
-	hs := reflect.StringHeader{Data: h.Data, Len: h.Len}
+func String(h SliceHeader) string {
+	hs := StringHeader{Data: h.Data, Len: h.Len}
 	return *(*string)(unsafe.Pointer(&hs))
 }
